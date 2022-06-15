@@ -13,7 +13,8 @@ const addTodo = (Event) => {
   todoLi.innerText = todoInput.value;
   todoLi.classList.add("ListItem");
   todoList.appendChild(todoLi);
-  //
+  // 
+  sortUpfc(todoInput.value);
   // add todo to localStorage
   saveLocalTodos(todoInput.value);
   // check mark btn
@@ -55,20 +56,19 @@ const completeCheck = (Event) => {
     completedTasksHolder.appendChild(todo);
   }
 };
-
+//
+//
 // filter
-const sortUP = () => {
-  const arr = [];
-  arr.push(todoInput.value)
-  console.log(arr);
-  arr.sort((a, b) => {
-    if (a > b) {
-      return 1;
-    } else {
-      return -1;
-    }
+const sortUP = document.getElementById("two");
+const arRay = [];
+const sortUpfc = (array) => {
+  arRay.push(array);
+  arRay.sort((a, b) => {
+    return a > b ? 1 : -1;
   });
+  console.log(arRay);
 };
+
 //
 //
 //
@@ -128,3 +128,4 @@ todoBtn.addEventListener("click", addTodo);
 todoList.addEventListener("click", deleteCheck);
 completedTasksHolder.addEventListener("click", deleteCheck);
 todoList.addEventListener("click", completeCheck);
+sortUP.addEventListener("click",sortUpfc);
