@@ -1,23 +1,130 @@
-import { WorkToDo } from "./oopWordList.js";
-
-const getEle = (id) => document.getElementById(id);
-let id = 0;
-getEle("addItem").onclick = () => {
-  id += 1;
-  const NewTask = getEle("newTask").value;
-  const worktodo = new WorkToDo(id, NewTask);
-  // const arrList = [];
-  // arrList.push(worktodo);
-  const result = worktodo.renDer();
-  console.log(worktodo);
-  getEle("todo").innerHTML += result;
-
-  let btnXoa = document.getElementsByClassName("xoaCV");
-  for (let i = 0; i < btnXoa.length; i++) {
-    btnXoa[i].onclick = () => {
-      worktodo.filter((ele) => ele.id !== id);
-    };
+// selector
+const todoInput = document.getElementById("newTask");
+const todoBtn = document.getElementById("addItem");
+const todoList = document.getElementById("todo");
+const todoLi = document.createElement("li");
+const filterDown = document.getElementById("two");
+const filterUp = document.getElementById("three");
+const completedTasksHolder = document.getElementById("completed");
+const addTodo = (Event) => {
+  Event.preventDefault();
+  // creat li
+  const todoLi = document.createElement("li");
+  todoLi.innerText = todoInput.value;
+  todoLi.classList.add("ListItem");
+  todoList.appendChild(todoLi);
+  //
+  // add todo to localStorage
+  saveLocalTodos(todoInput.value);
+  // check mark btn
+  const completeBtn = document.createElement("button");
+  completeBtn.innerHTML = '<i class="fa fa-check"></i>';
+  completeBtn.classList.add("complete-check");
+  todoLi.appendChild(completeBtn);
+  // trash btn
+  const trashBtn = document.createElement("button");
+  trashBtn.innerHTML = '<i class="fa fa-trash"></i>';
+  trashBtn.classList.add("delete-check");
+  todoLi.appendChild(trashBtn);
+  // clear to do Input
+  todoInput.value = "";
+};
+// delete
+const deleteCheck = (Event) => {
+  // console.log(Event.target);
+  const item = Event.target;
+  // delete todo
+  if (item.classList[0] === "delete-check") {
+    const todo = item.parentElement;
+    // animate
+    todo.classList.add("fall");
+    removeLocalTodos(todo);
+    // done animate will do remove
+    todo.addEventListener("transitionend", function () {
+      todo.remove();
+    });
+  }
+};
+// done
+const completeCheck = (Event) => {
+  // console.log(Event.target);
+  const item = Event.target;
+  //
+  if (item.classList[0] === "complete-check") {
+    const todo = item.parentElement;
+    completedTasksHolder.appendChild(todo);
   }
 };
 
-//Delete
+// filter
+const sortUP = () => {
+  const arr = [];
+  arr.push(todoInput.value)
+  console.log(arr);
+  arr.sort((a, b) => {
+    if (a > b) {
+      return 1;
+    } else {
+      return -1;
+    }
+  });
+};
+//
+//
+//
+// local Storeage
+const saveLocalTodos = (todo) => {
+  let todos;
+  if (localStorage.getItem("todos") === null) {
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem("todos"));
+  }
+  todos.push(todo);
+  localStorage.setItem("todos", JSON.stringify(todos));
+};
+
+const getLocalTodos = () => {
+  let todos;
+  if (localStorage.getItem("todos") === null) {
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem("todos"));
+  }
+  todos.forEach((todo) => {
+    // creat li
+    const todoLi = document.createElement("li");
+    todoLi.innerText = todo;
+    todoLi.classList.add("todo");
+    todoList.appendChild(todoLi);
+    // check mark btn
+    const completeBtn = document.createElement("button");
+    completeBtn.innerHTML = '<i class="fa fa-check"></i>';
+    completeBtn.classList.add("complete-check");
+    todoLi.appendChild(completeBtn);
+    // trash btn
+    const trashBtn = document.createElement("button");
+    trashBtn.innerHTML = '<i class="fa fa-trash"></i>';
+    trashBtn.classList.add("delete-check");
+    todoLi.appendChild(trashBtn);
+  });
+};
+
+const removeLocalTodos = (todo) => {
+  let todos;
+  if (localStorage.getItem("todos") === null) {
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem("todos"));
+  }
+  const todoIndex = todo.children[0].innerText;
+  todos.splice(todos.indexOf(todoIndex), 1);
+  localStorage.setItem("todos", JSON.stringify(todos));
+};
+
+// Event Listeners
+document.addEventListener("DOMContentLoaded", getLocalTodos);
+todoBtn.addEventListener("click", addTodo);
+todoList.addEventListener("click", deleteCheck);
+completedTasksHolder.addEventListener("click", deleteCheck);
+todoList.addEventListener("click", completeCheck);

@@ -240,6 +240,8 @@ ul.todo li {
   margin: 0 0 10px 0;
   padding: 0 10px; 
   word-break: break-word;
+  transition: all 0.5s;
+
 }
 
 ul.todo#todo{
@@ -328,7 +330,26 @@ ul.todo#completed li .buttons .complete .far{
 ul.todo#completed span{
   color: #25b99a;
 }
-.alt{
-  display: flex;
-  justify-content: space-between;
+.complete-check{
+  margin-left: auto;
+  background-color: rgb(85, 184, 85);
+}
+.delete-check{
+  margin-left: 0.3125em;
+  background-color: red;
+}
+.complete-check,.delete-check{
+  padding: 0.3em;
+  border-radius: 0.3125em;
+  border: 2px solid transparent;
+}
+.fa-trash,.fa-check{
+  pointer-events: none;
+}
+.fall{
+    transform: translateY(8rem) rotateZ(20deg);
+    opacity: 0;
+}
+#completed .complete-check{
+  display: none;
 }
